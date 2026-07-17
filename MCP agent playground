@@ -1,0 +1,166 @@
+# MCP Agent Playground – Execution Steps
+
+## Overview
+
+The MCP Agent Playground demonstrates how an AI agent discovers tools, selects the correct tool, calls it through an MCP client, and receives a structured response from an MCP server.
+
+This example shows a **Local MCP Lab**, where the agent and MCP server run on the same machine using a local process such as `stdio`.
+
+---
+
+## Local MCP Execution Flow
+
+### Step 1: User submits a request
+
+The user enters a natural language request.
+
+```text
+Check the stock status of Laptop.
+```
+
+---
+
+### Step 2: AI Agent interprets the request
+
+The AI agent understands the user’s intent and decides which tool should be used.
+
+```json
+{
+  "selected_tool": "read_inventory"
+}
+```
+
+---
+
+### Step 3: MCP Client lists available tools
+
+The MCP client discovers the tools exposed by the local MCP server.
+
+```json
+{
+  "method": "tools/list",
+  "transport": "stdio"
+}
+```
+
+Available tools include:
+
+```json
+{
+  "read_inventory": {
+    "description": "Read inventory details for a product from a local data source.",
+    "input_schema": {
+      "product": "string"
+    }
+  },
+  "calculate_bmi": {
+    "description": "Calculate BMI using weight and height.",
+    "input_schema": {
+      "weight_kg": "number",
+      "height_cm": "number"
+    }
+  },
+  "summarize_notes": {
+    "description": "Summarize local meeting notes.",
+    "input_schema": {
+      "notes": "string"
+    }
+  }
+}
+```
+
+---
+
+### Step 4: MCP Client calls the selected tool
+
+The MCP client validates the input and sends a tool call request to the MCP server.
+
+```json
+{
+  "method": "tools/call",
+  "name": "read_inventory",
+  "arguments": {
+    "product": "Laptop"
+  }
+}
+```
+
+---
+
+### Step 5: MCP Server executes the tool
+
+The MCP server runs the selected capability and returns a structured response.
+
+```json
+{
+  "result": {
+    "product": "Laptop",
+    "stock": 18,
+    "reorder_level": 10,
+    "warehouse": "Bengaluru",
+    "status": "Healthy"
+  }
+}
+```
+
+---
+
+### Step 6: AI Agent generates the final response
+
+The AI agent converts the structured MCP result into a user-friendly answer.
+
+```text
+The Laptop is currently in stock with 18 units available at the Bengaluru warehouse. 
+The reorder level is 10, so the stock status is Healthy.
+```
+
+---
+
+## Final Tool Result
+
+```json
+{
+  "product": "Laptop",
+  "stock": 18,
+  "reorder_level": 10,
+  "warehouse": "Bengaluru",
+  "status": "Healthy"
+}
+```
+
+---
+
+## Why Local MCP?
+
+Local MCP is useful for:
+
+* Fast development
+* Accessing private local data
+* Desktop automation
+* Local files and databases
+* Command-line tools
+* Safe experimentation
+
+---
+
+## Summary
+
+In this playground, the AI agent does not directly access the inventory data. Instead, it follows the MCP workflow:
+
+```text
+User Request
+   ↓
+AI Agent understands intent
+   ↓
+MCP Client lists available tools
+   ↓
+MCP Client calls the selected tool
+   ↓
+MCP Server executes the tool
+   ↓
+Structured result is returned
+   ↓
+AI Agent generates the final answer
+```
+
+This demonstrates how MCP allows AI agents to safely and systematically use external tools.
