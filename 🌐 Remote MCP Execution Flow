@@ -1,0 +1,201 @@
+# 🌐 Remote MCP Execution Flow
+
+## Overview
+
+The **Remote MCP Lab** demonstrates how an AI agent connects to a remote MCP server over the network to access external services. Unlike Local MCP, the agent communicates using **HTTPS**, **Streamable HTTP**, or **Server-Sent Events (SSE)** and may require authentication before calling tools.
+
+This example retrieves weather information from a remote MCP service.
+
+---
+
+## Remote MCP Architecture
+
+```text
+User
+   ↓
+AI Agent
+   ↓
+MCP Client
+   ↓ (HTTPS + Authentication)
+Remote MCP Server
+   ↓
+External API / Database
+   ↓
+Structured Result
+   ↓
+AI Agent
+   ↓
+Final Response
+```
+
+---
+
+## Step 1: User submits a request
+
+The user asks a question in natural language.
+
+```text
+What is the weather in Bengaluru?
+```
+
+---
+
+## Step 2: AI Agent interprets the request
+
+The AI agent analyzes the request and determines that the **get_weather** tool is required.
+
+```json
+{
+  "selected_tool": "get_weather"
+}
+```
+
+---
+
+## Step 3: MCP Client lists available tools
+
+The MCP client connects to the remote MCP server and discovers the tools it exposes.
+
+```json
+{
+  "method": "tools/list",
+  "transport": "HTTPS/SSE"
+}
+```
+
+---
+
+## Step 4: MCP Client attaches authentication
+
+Before contacting the remote server, the client attaches a bearer token for secure access.
+
+```json
+{
+  "authorization": "Bearer ••••••••"
+}
+```
+
+Authentication ensures that only authorized users or applications can access the remote MCP server.
+
+---
+
+## Step 5: MCP Client calls the selected tool
+
+The MCP client validates the input against the tool's schema and sends the request to the remote server.
+
+```json
+{
+  "method": "tools/call",
+  "name": "get_weather",
+  "arguments": {
+    "city": "Bengaluru"
+  }
+}
+```
+
+---
+
+## Step 6: Remote MCP Server executes the tool
+
+The remote MCP server processes the request, interacts with the external weather service, and returns a structured response.
+
+```json
+{
+  "result": {
+    "city": "Bengaluru",
+    "temperature_c": 26,
+    "condition": "Partly cloudy",
+    "humidity": 68
+  }
+}
+```
+
+---
+
+## Step 7: AI Agent generates the final response
+
+The AI agent converts the structured data into a natural language response that is easy for the user to understand.
+
+```text
+The current weather in Bengaluru is partly cloudy with a temperature of 26°C and a humidity level of 68%.
+```
+
+---
+
+## Final Tool Result
+
+```json
+{
+  "city": "Bengaluru",
+  "temperature_c": 26,
+  "condition": "Partly cloudy",
+  "humidity": 68
+}
+```
+
+---
+
+## Remote Server Configuration
+
+```json
+{
+  "server_url": "https://demo-mcp.example.com/mcp",
+  "transport": "streamable-http",
+  "authentication": "Bearer token",
+  "timeout_seconds": 10
+}
+```
+
+---
+
+## Simulated Network Information
+
+| Parameter           | Value               |
+| ------------------- | ------------------- |
+| Network Latency     | **650 ms**          |
+| Failure Probability | **0%**              |
+| Authentication      | **Bearer Token**    |
+| Transport           | **Streamable HTTP** |
+
+---
+
+## Key Considerations for Remote MCP
+
+When working with Remote MCP servers, developers should consider:
+
+* Authentication and authorization
+* HTTPS encryption
+* Network latency
+* Timeouts
+* Rate limiting
+* Audit logging
+* Server trust and verification
+* Data privacy and security
+
+---
+
+## Summary
+
+The Remote MCP workflow follows these steps:
+
+```text
+User Request
+      ↓
+AI Agent understands intent
+      ↓
+MCP Client lists remote tools
+      ↓
+Authentication is attached
+      ↓
+MCP Client calls the selected tool
+      ↓
+Remote MCP Server executes the request
+      ↓
+External API returns data
+      ↓
+Structured result is returned
+      ↓
+AI Agent generates the final response
+```
+
+This workflow illustrates how AI agents securely interact with cloud-hosted tools and external services using the Model Context Protocol (MCP), enabling real-time access to APIs, databases, and enterprise applications.
