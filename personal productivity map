@@ -1,0 +1,90 @@
+Personal Productivity MCP Agent
+
+A beginner-friendly AI-powered productivity assistant built with Python, Streamlit, OpenAI API, and the Model Context Protocol (MCP). The application demonstrates how an AI agent dynamically discovers and invokes tools from a local MCP server based on natural language requests, without requiring users to manually select tools.
+
+Features
+🤖 Chat-based AI assistant using OpenAI
+🔌 Local MCP Server using FastMCP with stdio transport
+📂 File management tools
+Create, read, rename, move, delete files
+Create folders
+Save JSON data
+📝 Notes management
+Save persistent notes
+Search notes by keyword
+Retrieve current system date and time
+🌦️ Live Weather
+Uses Open-Meteo API (no API key required)
+Current weather, temperature, humidity, wind speed, precipitation, and forecast
+🔍 Live Web Search
+Uses Tavily Search API for real-time news and information
+💬 Intelligent tool selection
+The AI automatically decides which MCP tool(s) to call based on the user's request
+🔄 Multi-step task execution
+Example:
+Check weather
+Search latest AI news
+Summarize results
+Save the report to a text file
+📊 Streamlit Chat Interface
+Chat history
+Tool execution logs
+MCP server status
+Available tools, prompts, and resources displayed in the sidebar
+Tech Stack
+Python
+Streamlit
+OpenAI API
+Model Context Protocol (MCP)
+FastMCP
+Open-Meteo API
+Tavily Search API
+python-dotenv
+Project Structure
+personal_productivity_mcp_agent/
+│
+├── mcp-server/
+│   └── server.py
+│
+├── mcp-client/
+│   └── client.py
+│
+├── workspace/
+├── app.py
+├── requirements.txt
+├── .env
+├── .env.example
+└── README.md
+How It Works
+The user enters a request in the Streamlit chat interface.
+The OpenAI model analyzes the request.
+The MCP client discovers the available tools exposed by the local MCP server.
+The AI selects the appropriate tool(s).
+The MCP server executes the requested operations.
+Results are returned to the AI and displayed in the chat interface.
+Example Prompts
+Create a file named notes.txt with today's meeting notes.
+Search my saved notes for "Python".
+Check the weather in Pune.
+Find the latest AI news.
+Summarize the latest AI news and save it as ai_report.txt.
+Create a folder called Projects and move report.txt into it.
+Environment Variables
+
+Create a .env file:
+
+OPENAI_API_KEY=your_openai_api_key
+TAVILY_API_KEY=your_tavily_api_key
+
+Note: I initially used a Google App Password instead of a Tavily API key, which prevented the live web search feature from returning current information. Replacing it with a valid Tavily API key resolved the issue.
+
+Learning Outcomes
+Building AI agents with the Model Context Protocol (MCP)
+Dynamic tool discovery and execution
+OpenAI function/tool calling
+Integrating third-party APIs
+Creating conversational applications with Streamlit
+Designing multi-step AI workflows
+Managing environment variables securely with .env
+
+This project demonstrates how MCP enables AI applications to dynamically discover and use external tools, making the assistant more flexible, modular, and capable of handling complex productivity tasks through natural language.
